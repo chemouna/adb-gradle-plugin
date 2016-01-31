@@ -1,0 +1,3 @@
+rootProject.name = 'adb-gradle-plugin'
+
+include ':adb-plugin', ':sample'

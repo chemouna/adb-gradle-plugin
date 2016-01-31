@@ -1,0 +1,64 @@
+group 'screenshots'
+version '0.1'
+
+apply plugin: 'groovy'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile gradleApi()
+  compile localGroovy()
+}
+
+
+
+
+/*
+task('demo', type: com.mounacheikhna.screenshots.adb.LaunchTask) {
+  deviceType("phone")
+  locale("es_ES")
+}
+*/
+
+//first lets make it work in this basic way
+//def locale = "es_ES"
+//String[] localeParts = locale.split("_")
+/*
+List<String> execArgs = ["adb", "shell", "'setprop", "persist.sys.language", "${localeParts[0]}", ";",
+                         "setprop", "persist.sys.country", "${localeParts[1]}", ";", "stop", ";",
+                         "sleep", "5", ";", "start'"]
+*/
+/*task launch(type: Exec) {
+  workingDir "test"
+  commandLine "adb", "shell", "'setprop", "persist.sys.language", "${localeParts[0]}", ";",
+      "setprop", "persist.sys.country", "${localeParts[1]}", ";", "stop", ";", "sleep", "5", ";",
+      "start'"
+}*/
+
+task launch2 << {
+  def locale = "fr_FR"
+  String[] localeParts = locale.split("_")
+  //adb -s emulator-5554 shell 'setprop persist.sys.language it; setprop persist.sys.country IT; stop; sleep 5;start'
+  List<String> command = [/*getAdb()*/ "adb", "shell", "'setprop persist.sys.language ${localeParts[0]}; setprop persist.sys.country ${localeParts[1]}; stop; sleep 5; start'"]
+  executeShellCommand(command)
+}
+
+
+def executeShellCommand(command) {
+  println("executing: ${command}")
+  def process = new ProcessBuilder((List<String>) command).redirectErrorStream(true).start()
+  process.inputStream.eachLine { println it }
+  process.waitFor()
+  if (process.exitValue() != 0) throw new GradleScriptException("adb exited with exit status ${process.exitValue()}", null)
+}
+
+def getAdb() {
+  def adbPath = "adb"
+  if (System.properties['adbPath']) {
+    adbPath = System.properties['adbPath']
+  }
+  return adbPath.toString()
+}
+
