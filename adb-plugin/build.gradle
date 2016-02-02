@@ -13,8 +13,6 @@ dependencies {
 }
 
 
-
-
 /*
 task('demo', type: com.mounacheikhna.screenshots.adb.LaunchTask) {
   deviceType("phone")
@@ -38,21 +36,16 @@ List<String> execArgs = ["adb", "shell", "'setprop", "persist.sys.language", "${
 }*/
 
 task launch2 << {
-  def locale = "fr_FR"
+  def locale = "es_ES"
   String[] localeParts = locale.split("_")
-  //adb -s emulator-5554 shell 'setprop persist.sys.language it; setprop persist.sys.country IT; stop; sleep 5;start'
-  List<String> command = [/*getAdb()*/ "adb", "shell", "'setprop persist.sys.language ${localeParts[0]}; setprop persist.sys.country ${localeParts[1]}; stop; sleep 5; start'"]
-  executeShellCommand(command)
-}
-
-
-def executeShellCommand(command) {
-  println("executing: ${command}")
-  def process = new ProcessBuilder((List<String>) command).redirectErrorStream(true).start()
+  def process = new ProcessBuilder("adb shell 'setprop persist.sys.language ${localeParts[0]}; setprop persist.sys.country ${localeParts[1]}; stop; sleep 5; start'")
+          .redirectErrorStream(true).start()
   process.inputStream.eachLine { println it }
   process.waitFor()
   if (process.exitValue() != 0) throw new GradleScriptException("adb exited with exit status ${process.exitValue()}", null)
 }
+
+
 
 def getAdb() {
   def adbPath = "adb"
