@@ -12,29 +12,6 @@ dependencies {
   compile localGroovy()
 }
 
-
-/*
-task('demo', type: com.mounacheikhna.screenshots.adb.LaunchTask) {
-  deviceType("phone")
-  locale("es_ES")
-}
-*/
-
-//first lets make it work in this basic way
-//def locale = "es_ES"
-//String[] localeParts = locale.split("_")
-/*
-List<String> execArgs = ["adb", "shell", "'setprop", "persist.sys.language", "${localeParts[0]}", ";",
-                         "setprop", "persist.sys.country", "${localeParts[1]}", ";", "stop", ";",
-                         "sleep", "5", ";", "start'"]
-*/
-/*task launch(type: Exec) {
-  workingDir "test"
-  commandLine "adb", "shell", "'setprop", "persist.sys.language", "${localeParts[0]}", ";",
-      "setprop", "persist.sys.country", "${localeParts[1]}", ";", "stop", ";", "sleep", "5", ";",
-      "start'"
-}*/
-
 task launch2 << {
   def locale = "es_ES"
   String[] localeParts = locale.split("_")
@@ -44,8 +21,6 @@ task launch2 << {
   process.waitFor()
   if (process.exitValue() != 0) throw new GradleScriptException("adb exited with exit status ${process.exitValue()}", null)
 }
-
-
 
 def getAdb() {
   def adbPath = "adb"
